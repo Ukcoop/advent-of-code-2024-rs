@@ -1,18 +1,16 @@
 // https://adventofcode.com/2024/day/1
 
-use csv::ReaderBuilder;
-use utils::*;
+use utils::sort;
+use utils::get_csv_data;
 
 pub fn get_lists(path: &str) -> (Vec<u32>, Vec<u32>) {
     let mut list_a = Vec::new();
     let mut list_b = Vec::new();
 
-    let mut rdr = ReaderBuilder::new().has_headers(false).from_path(path).unwrap();
-    for result in rdr.records() {
-        let record = result.unwrap();
-        let row: Vec<u32> = record.iter().map(|s| s.parse::<u32>().unwrap()).collect();
-        list_a.push(row[0]);
-        list_b.push(row[1]);
+    let data: Vec<Vec<u32>> = get_csv_data(path, false);
+    for result in data {
+        list_a.push(result[0]);
+        list_b.push(result[1]);
     }
 
     return (list_a, list_b);
@@ -31,10 +29,8 @@ pub fn minimum_distance(mut list_a: Vec<u32>, mut list_b: Vec<u32>) -> u32 {
     return dist;
 }
 
-pub fn similarity_score(mut list_a: Vec<u32>, mut list_b: Vec<u32>) -> u32 {
+pub fn similarity_score(list_a: Vec<u32>, list_b: Vec<u32>) -> u32 {
     let mut similarity: u32 = 0;
-    list_a = sort(list_a);
-    list_b = sort(list_b);
 
     for i in 0..list_a.len() {
         let mut repeated = 0;        
