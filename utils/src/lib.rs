@@ -1,31 +1,31 @@
-use std::str::FromStr;
 use std::fmt::Debug;
+use std::str::FromStr;
 
 use csv::ReaderBuilder;
 
 // standard CS algorithms
-pub fn sort(mut list: Vec<u32>) -> Vec<u32> {
+pub fn sort(list: &mut Vec<u32>) -> Vec<u32> {
     if list.len() <= 1 {
-        return list;
+        return list.to_vec();
     }
 
     let pivot = list.pop().unwrap();
 
-    let mut less_than_pivot = Vec::new();
-    let mut greater_than_pivot = Vec::new();
+    let less_than_pivot: &mut Vec<u32> = &mut Vec::new();
+    let greater_than_pivot: &mut Vec<u32> = &mut Vec::new();
 
     for x in list {
-        if x <= pivot {
-            less_than_pivot.push(x);
+        if *x <= pivot {
+            less_than_pivot.push(*x);
         } else {
-            greater_than_pivot.push(x);
+            greater_than_pivot.push(*x);
         }
     }
 
     let mut sorted = sort(less_than_pivot);
     sorted.push(pivot);
     sorted.extend(sort(greater_than_pivot));
-    
+
     return sorted;
 }
 
@@ -59,10 +59,11 @@ where
 mod tests {
     use super::*;
 
-    // standard CS algorithms    
+    // standard CS algorithms
     #[test]
     fn test_sort() {
-        let list = vec![34, 7, 23, 32, 5, 62];
+        let mut list_vec = vec![34, 7, 23, 32, 5, 62];
+        let list: &mut Vec<u32> = &mut list_vec;
         let result = sort(list);
         assert_eq!(result, vec![5, 7, 23, 32, 34, 62]);
     }
@@ -71,20 +72,26 @@ mod tests {
     #[test]
     fn test_get_csv_data() {
         let int_csv: Vec<Vec<u32>> = get_csv_data("data/testInt.csv", false);
-        assert_eq!(int_csv, vec![
-            vec![1, 2, 3, 4, 5],
-            vec![2, 3, 4, 5, 1],
-            vec![3, 4, 5, 1, 2],
-            vec![4, 5, 1, 2, 3],
-            vec![5, 1, 2, 3, 4],
-        ]);
+        assert_eq!(
+            int_csv,
+            vec![
+                vec![1, 2, 3, 4, 5],
+                vec![2, 3, 4, 5, 1],
+                vec![3, 4, 5, 1, 2],
+                vec![4, 5, 1, 2, 3],
+                vec![5, 1, 2, 3, 4],
+            ]
+        );
 
         let string_csv: Vec<Vec<String>> = get_csv_data("data/testString.csv", true);
-        assert_eq!(string_csv, vec![
-            vec!["jhon doe", "anonymity"],
-            vec!["alexander", "steam deck"],
-            vec!["bob", "lawn mower"],
-            vec!["alice", "baking sheets"]
-        ]);
+        assert_eq!(
+            string_csv,
+            vec![
+                vec!["jhon doe", "anonymity"],
+                vec!["alexander", "steam deck"],
+                vec!["bob", "lawn mower"],
+                vec!["alice", "baking sheets"]
+            ]
+        );
     }
 }

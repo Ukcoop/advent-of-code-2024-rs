@@ -45,6 +45,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "day4"
+version = "0.1.0"
+dependencies = [
+ "utils",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
