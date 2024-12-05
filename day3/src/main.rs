@@ -14,7 +14,7 @@ fn new_toggle(old_toggle: bool, test_string: String) -> bool {
     return false;
 }
 
-pub fn total_in_line(corrupted_string: &String, mul_toggle: bool) -> u32 {
+pub fn total_in_line(corrupted_string: &str, mul_toggle: bool) -> u32 {
     let mut total: u32 = 0;
     let mut mul_toggled = true;
 
@@ -22,7 +22,7 @@ pub fn total_in_line(corrupted_string: &String, mul_toggle: bool) -> u32 {
 
     for part in first_pass {
         let previous_toggle: bool = mul_toggled;
-        mul_toggled = new_toggle(mul_toggled.clone(), part.to_string());
+        mul_toggled = new_toggle(mul_toggled, part.to_string());
         if !previous_toggle && mul_toggle {
             continue;
         }

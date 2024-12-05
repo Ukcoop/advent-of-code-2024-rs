@@ -30,19 +30,19 @@ pub fn minimum_distance(list_a: &mut Vec<u32>, list_b: &mut Vec<u32>) -> u32 {
     return dist;
 }
 
-pub fn similarity_score(list_a: &Vec<u32>, list_b: &Vec<u32>) -> u32 {
+pub fn similarity_score(list_a: &[u32], list_b: &[u32]) -> u32 {
     let mut similarity: u32 = 0;
 
-    for i in 0..list_a.len() {
+    for a in list_a {
         let mut repeated = 0;
 
-        for j in 0..list_b.len() {
-            if list_a[i] == list_b[j] {
+        for b in list_b {
+            if a == b {
                 repeated += 1;
             }
         }
 
-        similarity += list_a[i] * repeated;
+        similarity += a * repeated;
     }
 
     return similarity;
@@ -56,7 +56,7 @@ fn main() {
     let min_distance = minimum_distance(&mut list_a, &mut list_b);
     println!("minimum distance: {}", min_distance);
 
-    let similarity = similarity_score(&mut list_a, &mut list_b);
+    let similarity = similarity_score(&list_a, &list_b);
     println!("similarity_score: {}", similarity);
 }
 

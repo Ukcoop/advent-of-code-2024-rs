@@ -12,7 +12,7 @@ fn get_word_search(path: &str) -> Vec<Vec<String>> {
     return word_search_matrix;
 }
 
-fn horizontal_search(word_matrix: &Vec<Vec<String>>) -> u32 {
+fn horizontal_search(word_matrix: &[Vec<String>]) -> u32 {
     // -
     let mut count: u32 = 0;
 
@@ -33,7 +33,7 @@ fn horizontal_search(word_matrix: &Vec<Vec<String>>) -> u32 {
     return count;
 }
 
-fn virtical_search(word_matrix: &Vec<Vec<String>>) -> u32 {
+fn virtical_search(word_matrix: &[Vec<String>]) -> u32 {
     // |
     let mut count: u32 = 0;
 
@@ -54,7 +54,7 @@ fn virtical_search(word_matrix: &Vec<Vec<String>>) -> u32 {
     return count;
 }
 
-fn diagnal_right_search(word_matrix: &Vec<Vec<String>>) -> u32 {
+fn diagnal_right_search(word_matrix: &[Vec<String>]) -> u32 {
     // \
     let mut count: u32 = 0;
 
@@ -75,7 +75,7 @@ fn diagnal_right_search(word_matrix: &Vec<Vec<String>>) -> u32 {
     return count;
 }
 
-fn diagnal_left_search(word_matrix: &Vec<Vec<String>>) -> u32 {
+fn diagnal_left_search(word_matrix: &[Vec<String>]) -> u32 {
     // /
     let mut count: u32 = 0;
 
@@ -96,17 +96,17 @@ fn diagnal_left_search(word_matrix: &Vec<Vec<String>>) -> u32 {
     return count;
 }
 
-pub fn word_search(word_matrix: &Vec<Vec<String>>) -> u32 {
+pub fn word_search(word_matrix: &[Vec<String>]) -> u32 {
     let mut count: u32 = 0;
-    count += horizontal_search(&word_matrix);
-    count += virtical_search(&word_matrix);
-    count += diagnal_right_search(&word_matrix);
-    count += diagnal_left_search(&word_matrix);
+    count += horizontal_search(word_matrix);
+    count += virtical_search(word_matrix);
+    count += diagnal_right_search(word_matrix);
+    count += diagnal_left_search(word_matrix);
 
     return count;
 }
 
-pub fn x_mas_search(word_matrix: &Vec<Vec<String>>) -> u32 {
+pub fn x_mas_search(word_matrix: &[Vec<String>]) -> u32 {
     let mut count: u32 = 0;
 
     for i in 0..(word_matrix.len() - 2) {
