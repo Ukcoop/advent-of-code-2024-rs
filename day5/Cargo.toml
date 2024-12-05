@@ -1,0 +1,10 @@
+[package]
+name = "day5"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+utils = { path = "../utils" }
+
+[lints.clippy]
+needless_return = "allow"
