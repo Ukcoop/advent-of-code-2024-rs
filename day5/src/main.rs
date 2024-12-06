@@ -6,7 +6,7 @@ use utils::get_csv_data;
 fn get_rules(path: &str) -> HashMap<String, bool> {
     let mut rules = HashMap::new();
     let rules_vec: Vec<Vec<u32>> = get_csv_data(path, false);
-    
+
     for rule in rules_vec {
         rules.insert(format!("{}|{}", rule[0], rule[1]), true);
     }
@@ -17,7 +17,9 @@ fn get_rules(path: &str) -> HashMap<String, bool> {
 fn is_in_order(rules: &HashMap<String, bool>, update: &[u32]) -> bool {
     for i in 0..update.len() {
         for j in 0..update.len() {
-            if i == j { continue }
+            if i == j {
+                continue;
+            }
             let possible_rule = if i > j {
                 format!("{}|{}", update[i], update[j])
             } else {
@@ -37,8 +39,9 @@ fn is_in_order(rules: &HashMap<String, bool>, update: &[u32]) -> bool {
 fn sort_update(rules: &HashMap<String, bool>, mut update: Vec<u32>) -> Vec<u32> {
     if update.len() <= 1 {
         return update;
-    } 
+    }
 
+    // this unwrap is here because in certian it will not panic
     let pivot = update.pop().unwrap();
 
     let mut less_than_pivot: Vec<u32> = Vec::new();
@@ -83,7 +86,7 @@ fn main() {
 
     let (sorted_count, unsorted_count) = count_of_middle_numbers(&rules, &updates);
     println!("sorted count of middle numbers: {}", sorted_count);
-    println!("sorted count of middle numbers: {}", unsorted_count);    
+    println!("sorted count of middle numbers: {}", unsorted_count);
 }
 
 #[cfg(test)]

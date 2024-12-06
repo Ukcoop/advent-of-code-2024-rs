@@ -9,6 +9,7 @@ pub fn sort(list: &mut Vec<u32>) -> Vec<u32> {
         return list.to_vec();
     }
 
+    // this unwrap is here because in certian it will not panic
     let pivot = list.pop().unwrap();
 
     let less_than_pivot: &mut Vec<u32> = &mut Vec::new();
