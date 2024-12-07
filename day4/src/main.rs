@@ -2,14 +2,18 @@
 
 use utils::get_csv_data;
 
-fn get_word_search(path: &str) -> Vec<Vec<String>> {
-    let mut word_search_matrix: Vec<Vec<String>> = get_csv_data(path, false);
+fn get_word_search(path: &str) -> Result<Vec<Vec<String>>, Box<dyn std::error::Error>> {
+    let mut word_search_matrix = get_csv_data::<String>(path, false)?;
 
     for i in 0..word_search_matrix.len() {
-        word_search_matrix[i] = word_search_matrix[i][0].split("").map(String::from).collect();
+        word_search_matrix[i] = word_search_matrix[i][0]
+            .split("")
+            .filter(|s| !s.is_empty())
+            .map(String::from)
+            .collect();
     }
 
-    return word_search_matrix;
+    return Ok(word_search_matrix);
 }
 
 fn horizontal_search(word_matrix: &[Vec<String>]) -> u32 {
@@ -144,13 +148,18 @@ pub fn x_mas_search(word_matrix: &[Vec<String>]) -> u32 {
 }
 
 fn main() {
-    let word_search_matrix = get_word_search("data/input.csv");
+    match get_word_search("data/input.csv") {
+        Ok(word_search_matrix) => {
+            let word_search_count = word_search(&word_search_matrix);
+            println!("word search count: {}", word_search_count);
 
-    let word_search_count = word_search(&word_search_matrix);
-    println!("word search count: {}", word_search_count);
-
-    let x_mas_count = x_mas_search(&word_search_matrix);
-    println!("x-mas count: {}", x_mas_count);
+            let x_mas_count = x_mas_search(&word_search_matrix);
+            println!("x-mas count: {}", x_mas_count);
+        }
+        Err(e) => {
+            println!("Error: failed to retrieve CSV data. {}", e);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -159,15 +168,27 @@ mod tests {
 
     #[test]
     fn test_word_search() {
-        let word_search_matrix = get_word_search("data/test.csv");
-        let count = word_search(&word_search_matrix);
-        assert_eq!(count, 18);
+        match get_word_search("data/test.csv") {
+            Ok(word_search_matrix) => {
+                let count = word_search(&word_search_matrix);
+                assert_eq!(count, 18);
+            }
+            Err(e) => {
+                panic!("Error: failed to retrieve CSV data. {}", e);
+            }
+        }
     }
 
     #[test]
     fn test_x_mas_search() {
-        let word_search_matrix = get_word_search("data/test.csv");
-        let count = x_mas_search(&word_search_matrix);
-        assert_eq!(count, 9);
+        match get_word_search("data/test.csv") {
+            Ok(word_search_matrix) => {
+                let count = x_mas_search(&word_search_matrix);
+                assert_eq!(count, 9);
+            }
+            Err(e) => {
+                panic!("Error: failed to retrieve CSV data. {}", e);
+            }
+        }
     }
 }

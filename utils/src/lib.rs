@@ -1,4 +1,3 @@
-use std::fmt::Debug;
 use std::str::FromStr;
 
 use csv::ReaderBuilder;
@@ -6,54 +5,53 @@ use csv::ReaderBuilder;
 // standard CS algorithms
 pub fn sort(list: &mut Vec<u32>) -> Vec<u32> {
     if list.len() <= 1 {
-        return list.to_vec();
+        return list.clone();
     }
 
-    // this unwrap is here because in certian it will not panic
-    let pivot = list.pop().unwrap();
+    let pivot = match list.pop() {
+        Some(value) => value,
+        None => return Vec::new(),
+    };
 
-    let less_than_pivot: &mut Vec<u32> = &mut Vec::new();
-    let greater_than_pivot: &mut Vec<u32> = &mut Vec::new();
+    let mut less_than_pivot = Vec::new();
+    let mut greater_than_pivot = Vec::new();
 
-    for x in list {
-        if *x <= pivot {
-            less_than_pivot.push(*x);
+    for &x in list.iter() {
+        if x <= pivot {
+            less_than_pivot.push(x);
         } else {
-            greater_than_pivot.push(*x);
+            greater_than_pivot.push(x);
         }
     }
 
-    let mut sorted = sort(less_than_pivot);
+    let mut sorted = sort(&mut less_than_pivot);
     sorted.push(pivot);
-    sorted.extend(sort(greater_than_pivot));
+    sorted.extend(sort(&mut greater_than_pivot));
 
     return sorted;
 }
 
 // data processing
-pub fn get_csv_data<T>(path: &str, headers: bool) -> Vec<Vec<T>>
+pub fn get_csv_data<T>(path: &str, headers: bool) -> Result<Vec<Vec<T>>, Box<dyn std::error::Error>>
 where
     T: FromStr,
-    <T as FromStr>::Err: Debug,
+    <T as FromStr>::Err: std::error::Error + 'static,
 {
     let mut data: Vec<Vec<T>> = Vec::new();
 
     let mut rdr = ReaderBuilder::new()
         .has_headers(headers)
         .flexible(true)
-        .from_path(path)
-        .expect("Failed to open CSV file");
+        .from_path(path)?;
 
     for result in rdr.records() {
-        let record = result.expect("Failed to read record");
-        let row = record
-            .iter()
-            .map(|s| s.parse::<T>().expect("Failed to parse value"))
-            .collect();
-        data.push(row);
+        let record = result?;
+        let row: Result<Vec<T>, _> = record.iter().map(|s| s.parse::<T>()).collect();
+
+        data.push(row?);
     }
 
-    return data;
+    return Ok(data);
 }
 
 #[cfg(test)]
@@ -72,7 +70,14 @@ mod tests {
     // data processing
     #[test]
     fn test_get_csv_data() {
-        let int_csv: Vec<Vec<u32>> = get_csv_data("data/testInt.csv", false);
+        // Handling the result from get_csv_data
+        let int_csv: Vec<Vec<u32>> = match get_csv_data("data/testInt.csv", false) {
+            Ok(result) => result,
+            Err(e) => {
+                panic!("Error: Failed to retrieve int CSV data. {}", e);
+            }
+        };
+
         assert_eq!(
             int_csv,
             vec![
@@ -84,7 +89,13 @@ mod tests {
             ]
         );
 
-        let string_csv: Vec<Vec<String>> = get_csv_data("data/testString.csv", true);
+        let string_csv: Vec<Vec<String>> = match get_csv_data("data/testString.csv", true) {
+            Ok(result) => result,
+            Err(e) => {
+                panic!("Error: Failed to retrieve string CSV data. {}", e);
+            }
+        };
+
         assert_eq!(
             string_csv,
             vec![

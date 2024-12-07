@@ -3,14 +3,16 @@
 use utils::get_csv_data;
 
 fn new_toggle(old_toggle: bool, test_string: String) -> bool {
-    let do_length = test_string.split("do()").last().unwrap().len();
-    let dont_length = test_string.split("don't()").last().unwrap().len();
+    let do_length = test_string.split("do()").last().unwrap_or("").len();
+    let dont_length = test_string.split("don't()").last().unwrap_or("").len();
+
     if do_length == dont_length {
         return old_toggle;
     }
     if do_length < dont_length {
         return true;
     }
+
     return false;
 }
 
@@ -45,18 +47,24 @@ pub fn total_in_line(corrupted_string: &str, mul_toggle: bool) -> u32 {
 }
 
 fn main() {
-    let corrupted_code_segements: Vec<Vec<String>> = get_csv_data("data/input.csv", false);
-    let mut full_corrupted_code: String = "".to_string();
+    match get_csv_data::<String>("data/input.csv", false) {
+        Ok(corrupted_code_segments) => {
+            let mut full_corrupted_code = String::new();
 
-    for code in corrupted_code_segements {
-        full_corrupted_code += &code.join(",").to_string();
+            for code in corrupted_code_segments {
+                full_corrupted_code += &code.join(",");
+            }
+
+            let total_without_toggle = total_in_line(&full_corrupted_code, false);
+            println!("without toggle: {}", total_without_toggle);
+
+            let total_with_toggle = total_in_line(&full_corrupted_code, true);
+            println!("with toggle: {}", total_with_toggle);
+        }
+        Err(e) => {
+            println!("Error: failed to retrieve CSV data. {}", e);
+        }
     }
-
-    let total_without_toggle = total_in_line(&full_corrupted_code, false);
-    println!("without toggle: {}", total_without_toggle);
-
-    let total_with_toggle = total_in_line(&full_corrupted_code, true);
-    println!("with toggle: {}", total_with_toggle);
 }
 
 #[cfg(test)]

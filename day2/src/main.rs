@@ -55,12 +55,18 @@ pub fn reactors_safe(reports: &Vec<Vec<u32>>, dampener_enabled: bool) -> u32 {
 }
 
 fn main() {
-    let reports = get_csv_data("data/input.csv", false);
-    let safe_reactors = reactors_safe(&reports, false);
-    println!("save reactors: {}", safe_reactors);
+    match get_csv_data("data/input.csv", false) {
+        Ok(reports) => {
+            let safe_reactors = reactors_safe(&reports, false);
+            println!("safe reactors: {}", safe_reactors);
 
-    let safe_reactors_with_dampener = reactors_safe(&reports, true);
-    println!("save reactors with dampener: {}", safe_reactors_with_dampener);
+            let safe_reactors_with_dampener = reactors_safe(&reports, true);
+            println!("safe reactors with dampener: {}", safe_reactors_with_dampener);
+        }
+        Err(e) => {
+            println!("Error: failed to retrieve CSV data. {}", e);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -69,15 +75,27 @@ mod tests {
 
     #[test]
     fn test_reactors_safe() {
-        let reports = get_csv_data("data/test.csv", false);
-        let result = reactors_safe(&reports, false);
-        assert_eq!(result, 2);
+        match get_csv_data("data/test.csv", false) {
+            Ok(reports) => {
+                let result = reactors_safe(&reports, false);
+                assert_eq!(result, 2);
+            }
+            Err(e) => {
+                panic!("Error: failed to retrieve CSV data. {}", e);
+            }
+        }
     }
 
     #[test]
     fn test_reactors_safe_with_dampener() {
-        let reports = get_csv_data("data/test.csv", false);
-        let result = reactors_safe(&reports, true);
-        assert_eq!(result, 4);
+        match get_csv_data("data/test.csv", false) {
+            Ok(reports) => {
+                let result = reactors_safe(&reports, true);
+                assert_eq!(result, 4);
+            }
+            Err(e) => {
+                panic!("Error: failed to retrieve CSV data. {}", e);
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 use rayon::prelude::*;
 use std::collections::HashMap;
+use std::error::Error;
 
 use utils::get_csv_data;
 
@@ -20,12 +21,14 @@ enum GuardDirection {
     Right,
 }
 
-fn get_map(path: &str) -> (Vec<Vec<MapState>>, (usize, usize)) {
+type MapResult = Result<(Vec<Vec<MapState>>, (usize, usize)), Box<dyn Error>>;
+
+fn get_map(path: &str) -> MapResult {
     let mut map: Vec<Vec<MapState>> = Vec::new();
     let mut guard_x: usize = 0;
     let mut guard_y: usize = 0;
 
-    let mut input_map: Vec<Vec<String>> = get_csv_data(path, false);
+    let mut input_map: Vec<Vec<String>> = get_csv_data(path, false)?;
 
     for i in 0..input_map.len() {
         let mut row: Vec<String> = input_map[i][0].split("").map(String::from).collect();
@@ -56,14 +59,14 @@ fn get_map(path: &str) -> (Vec<Vec<MapState>>, (usize, usize)) {
         map.push(row);
     }
 
-    return (map, (guard_x, guard_y));
+    Ok((map, (guard_x, guard_y)))
 }
 
 fn copy_map(map: &Vec<Vec<MapState>>) -> Vec<Vec<MapState>> {
     let mut map_copy: Vec<Vec<MapState>> = Vec::new();
 
     for row in map {
-        map_copy.push(row.to_vec());
+        map_copy.push(row.clone());
     }
 
     return map_copy;
@@ -180,7 +183,13 @@ pub fn total_possible_loops(map: Vec<Vec<MapState>>, initial_x: usize, initial_y
 }
 
 fn main() {
-    let (map, (initial_x, initial_y)) = get_map("data/input.csv");
+    let (map, (initial_x, initial_y)) = match get_map("data/input.csv") {
+        Ok(result) => result,
+        Err(e) => {
+            println!("Error: Failed to retrieve map data. {}", e);
+            return;
+        }
+    };
 
     let (_, _, unique_positions) = get_unique_positions(copy_map(&map), initial_x, initial_y);
     println!("unique positions: {}", unique_positions);
@@ -195,7 +204,13 @@ mod tests {
 
     #[test]
     fn test_get_unique_positions() {
-        let (map, (initial_x, initial_y)) = get_map("data/test.csv");
+        let (map, (initial_x, initial_y)) = match get_map("data/test.csv") {
+            Ok(result) => result,
+            Err(e) => {
+                panic!("Error: Failed to retrieve map data in test_get_unique_positions. {}", e);
+            }
+        };
+
         let (_, looped, result) = get_unique_positions(map, initial_x, initial_y);
         assert_eq!(looped, false);
         assert_eq!(result, 41);
@@ -203,7 +218,13 @@ mod tests {
 
     #[test]
     fn test_total_possible_loops() {
-        let (map, (initial_x, initial_y)) = get_map("data/test.csv");
+        let (map, (initial_x, initial_y)) = match get_map("data/test.csv") {
+            Ok(result) => result,
+            Err(e) => {
+                panic!("Error: Failed to retrieve map data in test_total_possible_loops. {}", e);
+            }
+        };
+
         let result = total_possible_loops(map, initial_x, initial_y);
         assert_eq!(result, 6);
     }

@@ -3,17 +3,22 @@
 use utils::get_csv_data;
 use utils::sort;
 
-pub fn get_lists(path: &str) -> (Vec<u32>, Vec<u32>) {
+pub fn get_lists(path: &str) -> Result<(Vec<u32>, Vec<u32>), Box<dyn std::error::Error>> {
     let mut list_a = Vec::new();
     let mut list_b = Vec::new();
 
-    let data: Vec<Vec<u32>> = get_csv_data(path, false);
+    let data = get_csv_data::<u32>(path, false)?;
+
     for result in data {
-        list_a.push(result[0]);
-        list_b.push(result[1]);
+        if result.len() >= 2 {
+            list_a.push(result[0]);
+            list_b.push(result[1]);
+        } else {
+            return Err("CSV row has fewer than 2 columns".into());
+        }
     }
 
-    return (list_a, list_b);
+    return Ok((list_a, list_b));
 }
 
 pub fn minimum_distance(list_a: &mut Vec<u32>, list_b: &mut Vec<u32>) -> u32 {
@@ -49,15 +54,19 @@ pub fn similarity_score(list_a: &[u32], list_b: &[u32]) -> u32 {
 }
 
 fn main() {
-    let mut list_a;
-    let mut list_b;
-    (list_a, list_b) = get_lists("data/input.csv");
+    match get_lists("data/input.csv") {
+        Ok((mut list_a, mut list_b)) => {
+            let min_distance = minimum_distance(&mut list_a, &mut list_b);
+            println!("minimum distance: {}", min_distance);
 
-    let min_distance = minimum_distance(&mut list_a, &mut list_b);
-    println!("minimum distance: {}", min_distance);
+            let similarity = similarity_score(&list_a, &list_b);
+            println!("similarity score: {}", similarity);
+        }
 
-    let similarity = similarity_score(&list_a, &list_b);
-    println!("similarity_score: {}", similarity);
+        Err(e) => {
+            println!("Error: failed to retrieve CSV data. {}", e);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -66,21 +75,27 @@ mod tests {
 
     #[test]
     fn test_minimum_distance() {
-        let mut test_a;
-        let mut test_b;
-        (test_a, test_b) = get_lists("data/test.csv");
-
-        let result = minimum_distance(&mut test_a, &mut test_b);
-        assert_eq!(result, 11);
+        match get_lists("data/test.csv") {
+            Ok((mut test_a, mut test_b)) => {
+                let result = minimum_distance(&mut test_a, &mut test_b);
+                assert_eq!(result, 11);
+            }
+            Err(e) => {
+                println!("Error: failed to retrieve CSV data. {}", e);
+            }
+        }
     }
 
     #[test]
     fn test_similarity_score() {
-        let mut test_a;
-        let mut test_b;
-        (test_a, test_b) = get_lists("data/test.csv");
-
-        let result = similarity_score(&mut test_a, &mut test_b);
-        assert_eq!(result, 31);
+        match get_lists("data/test.csv") {
+            Ok((mut test_a, mut test_b)) => {
+                let result = similarity_score(&mut test_a, &mut test_b);
+                assert_eq!(result, 31);
+            }
+            Err(e) => {
+                panic!("Error: failed to retrieve CSV data. {}", e);
+            }
+        }
     }
 }
