@@ -1,4 +1,4 @@
-// https://adventofcode.com/2024/day/7
+// https://adventofcode.com/2024/day/8
 
 use std::collections::HashMap;
 use std::convert::From;
