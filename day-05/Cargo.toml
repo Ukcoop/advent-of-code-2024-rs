@@ -1,16 +1,13 @@
 [package]
-name = "day6"
+name = "day-05"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rayon = "1.7"
-
 utils = { path = "../utils" }
 
 [lints.clippy]
 needless_return = "allow"
-needless_range_loop = "allow"
 
 unwrap_used = "deny"
 expect_used = "deny"

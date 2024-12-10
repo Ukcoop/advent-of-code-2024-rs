@@ -49,50 +49,42 @@ dependencies = [
 ]
 
 [[package]]
-name = "day1"
+name = "day-01"
 version = "0.1.0"
 dependencies = [
  "utils",
 ]
 
 [[package]]
-name = "day2"
+name = "day-02"
 version = "0.1.0"
 dependencies = [
  "utils",
 ]
 
 [[package]]
-name = "day3"
+name = "day-03"
 version = "0.1.0"
 dependencies = [
  "utils",
 ]
 
 [[package]]
-name = "day4"
+name = "day-04"
 version = "0.1.0"
 dependencies = [
  "utils",
 ]
 
 [[package]]
-name = "day5"
+name = "day-05"
 version = "0.1.0"
 dependencies = [
  "utils",
 ]
 
 [[package]]
-name = "day6"
-version = "0.1.0"
-dependencies = [
- "rayon",
- "utils",
-]
-
-[[package]]
-name = "day7"
+name = "day-06"
 version = "0.1.0"
 dependencies = [
  "rayon",
@@ -100,14 +92,22 @@ dependencies = [
 ]
 
 [[package]]
-name = "day8"
+name = "day-07"
+version = "0.1.0"
+dependencies = [
+ "rayon",
+ "utils",
+]
+
+[[package]]
+name = "day-08"
 version = "0.1.0"
 dependencies = [
  "utils",
 ]
 
 [[package]]
-name = "day9"
+name = "day-09"
 version = "0.1.0"
 dependencies = [
  "rayon",

@@ -1,11 +1,9 @@
 [package]
-name = "day7"
+name = "day-08"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rayon = "1.7"
-
 utils = { path = "../utils" }
 
 [lints.clippy]

@@ -1,5 +1,5 @@
 [package]
-name = "day8"
+name = "day-02"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,7 +8,6 @@ utils = { path = "../utils" }
 
 [lints.clippy]
 needless_return = "allow"
-needless_range_loop = "allow"
 
 unwrap_used = "deny"
 expect_used = "deny"
