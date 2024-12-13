@@ -1,4 +1,4 @@
-// https://adventofcode.com/2024/day/9
+// https://adventofcode.com/2024/day/10
 
 use std::collections::HashMap;
 use std::error::Error;
@@ -55,9 +55,7 @@ fn count_trail_paths(map: &Vec<Vec<String>>, i_start: &usize, j_start: &usize) -
         }
 
         for (spot_i, spot_j) in check_spots {
-            if digit + 1 == map[spot_i][spot_j].parse::<u32>().unwrap_or(10)
-                && digit + 1 == map[spot_i][spot_j].parse::<u32>().unwrap_or(10)
-            {
+            if digit + 1 == map[spot_i][spot_j].parse::<u32>().unwrap_or(10) {
                 can_go_to.push((spot_i, spot_j));
             }
         }

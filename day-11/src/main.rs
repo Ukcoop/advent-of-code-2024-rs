@@ -1,4 +1,4 @@
-// https://adventofcode.com/2024/day/9
+// https://adventofcode.com/2024/day/11
 
 use std::collections::HashMap;
 
@@ -59,7 +59,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_get_count_of_rocks_after_25_blinks() {
         let rocks: Vec<u64> = match get_csv_data("data/test.csv", false) {
